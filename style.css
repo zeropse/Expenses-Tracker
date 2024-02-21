@@ -1,10 +1,13 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
+    background-color: #1a1a1a;
+    color: #fff;
 }
 
 h1, h2 {
     text-align: center;
+    color: inherit;
 }
 
 .input-section {
@@ -12,17 +15,22 @@ h1, h2 {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
+    background-color: #333;
 }
 
 .input-section label {
     font-weight: bold;
     margin-right: 10px;
+    color: inherit;
 }
 
 .input-section input[type="number"],
 .input-section input[type="date"] {
     padding: 5px;
     margin-right: 10px;
+    background-color: #444;
+    color: #fff;
+    border: none;
 }
 
 .input-section button,
@@ -49,11 +57,11 @@ td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+    color: #fff;
 }
 
 th {
-    background-color: rgb(215, 222, 38);
-    color: rgb(12, 1, 1);
+    background-color: #222;
 }
 
 tfoot td {
