@@ -1,6 +1,3 @@
-let expenses = [];
-let totalAmount = 0;
-
 const categorySelect = document.getElementById('item-name');
 const amountInput = document.getElementById('amount-input');
 const dateInput = document.getElementById('date-input');
@@ -8,55 +5,76 @@ const addBtn = document.getElementById('add-btn');
 const expenseTableBody = document.getElementById('expenses-tbody');
 const totalAmountCell = document.getElementById('total-amount');
 
-addBtn.addEventListener('click', function () {
-    const category = categorySelect.value;
-    const amount = Number(amountInput.value);
-    const date = dateInput.value;
+let expenses = [];
+let totalAmount = 0;
 
-    if (category === '') {
-        alert('Please enter an Item');
+addBtn.addEventListener('click', addExpense);
+
+function addExpense() {
+    const category = categorySelect.value.trim();
+    const amount = parseFloat(amountInput.value.trim());
+    const date = dateInput.value.trim();
+
+    if (!validateInput(category, amount, date)) {
         return;
     }
-    if (isNaN(amount) || amount <= 0) {
-        alert('Please enter a valid amount');
-        return;
-    }
-    if (date === '') {
-        alert('Please select a date');
-        return;
-    }
-    expenses.push({ category, amount, date });
+
+    const expense = { category, amount, date };
+    expenses.push(expense);
 
     totalAmount += amount;
     totalAmountCell.textContent = totalAmount;
 
+    renderExpenseRow(expense);
+    resetForm();
+}
+
+function validateInput(category, amount, date) {
+    if (!category) {
+        showAlert('Please enter an Item');
+        return false;
+    }
+    if (isNaN(amount) || amount <= 0) {
+        showAlert('Please enter a valid amount');
+        return false;
+    }
+    if (!date) {
+        showAlert('Please select a date');
+        return false;
+    }
+    return true;
+}
+
+function showAlert(message) {
+    alert(message);
+}
+
+function renderExpenseRow(expense) {
     const newRow = expenseTableBody.insertRow();
+    newRow.innerHTML = `
+        <td>${expense.category}</td>
+        <td>${expense.amount}</td>
+        <td>${expense.date}</td>
+        <td><button class="delete-btn">Delete</button></td>
+    `;
 
-    const categoryCell = newRow.insertCell();
-    const AmountCell = newRow.insertCell();
-    const dateCell = newRow.insertCell();
-    const deleteCell = newRow.insertCell();
-
-    const deleteBtn = document.createElement('button');
-
-    deleteBtn.textContent = 'Delete';
-    deleteBtn.classList.add('delete-btn');
+    const deleteBtn = newRow.querySelector('.delete-btn');
     deleteBtn.addEventListener('click', function () {
-        const index = expenses.findIndex(expense => expense.category === category && expense.amount === amount && expense.date === date);
-        if (index !== -1) {
-            totalAmount -= expenses[index].amount;
-            totalAmountCell.textContent = totalAmount;
-            expenses.splice(index, 1);
-            expenseTableBody.removeChild(newRow);
-        }
+        deleteExpense(expense, newRow);
     });
+}
 
-    categoryCell.textContent = category;
-    AmountCell.textContent = amount;
-    dateCell.textContent = date;
-    deleteCell.appendChild(deleteBtn);
+function deleteExpense(expense, row) {
+    const index = expenses.indexOf(expense);
+    if (index !== -1) {
+        totalAmount -= expense.amount;
+        totalAmountCell.textContent = totalAmount;
+        expenses.splice(index, 1);
+        expenseTableBody.removeChild(row);
+    }
+}
 
+function resetForm() {
     categorySelect.value = '';
     amountInput.value = '';
-});
-
+}
